@@ -1,8 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateProductDto } from './create-product.dto';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsPositive } from 'class-validator';
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
+
+    @IsNumber()
+    @IsPositive()
+    id: number
 
     @IsOptional()
     @IsBoolean()

@@ -27,7 +27,10 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
     const currentPage = page ?? 1
     const currentLimit = limit ?? 10
 
-    const totalRegiter = await this.product.count()
+    console.log(currentPage)
+    console.log(currentLimit)
+
+    const totalRegiter = await this.product.count({ where: { available: true }} )
     const totalPage = Math.ceil(totalRegiter / currentLimit)
 
     let pages = 'página'
@@ -43,7 +46,10 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
     return {
       data: await this.product.findMany({
         skip: (currentPage - 1) * currentLimit, 
-        take: limit
+        take: currentLimit,
+        where: { 
+          available: true
+        }
       }),
       meta: {
         totalRegister: totalRegiter,
@@ -68,11 +74,12 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 
   async update(id: number, updateProductDto: UpdateProductDto) {
 
+    const { id: __, ... data} = updateProductDto
     await this.findOne(id)
 
     return this.product.update({
       where: { id },
-      data: updateProductDto
+      data: data
     });
   }
 
